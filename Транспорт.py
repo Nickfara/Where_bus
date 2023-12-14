@@ -74,17 +74,16 @@ def program(number, station):
 
     def where_my_transport(number, station):
         number = str(number)
-        station_text =('Студенческая' if station == '3457' else ('Театр музыкальной комедии' if station == '3438'else ''))
-        text = "Твоего трамвая нет в списке по остановке: " + station_text
+        text = f"трамвая: {number} нет в списке по остановке: " + stations['Трамваи'][station]
 
         for i in transport_list:
             if i == 'Нет данных':
-                text = i + ' по остановке: ' + station_text
+                text = i + ' по остановке: ' + stations['Трамваи'][station]
             elif i == 'Пока неизвестная ошибка':
-                text = i + ' по остановке: ' + station_text
+                text = i + ' по остановке: ' + stations['Трамваи'][station]
             else:
                 if i['number'] == number:
-                    text = i['number'] + ' трамвай будет через: ' + i['time'] + ', на остановке: ' + station_text
+                    text = i['number'] + ' трамвай будет через: ' + i['time'] + ', на остановке: ' + stations['Трамваи'][station]
                     break
         return text
 
