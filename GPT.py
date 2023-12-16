@@ -1,5 +1,7 @@
 import g4f
 import asyncio
+from fp.fp import FreeProxy
+proxy = FreeProxy().get()
 
 _providers = [
     g4f.Provider.Aichat,
@@ -8,31 +10,50 @@ _providers = [
     g4f.Provider.GptGo,
     g4f.Provider.You,
     g4f.Provider.Yqcloud,
-    g4f.Provider.GeekGpt
+    g4f.Provider.GeekGpt,
+    g4f.Provider.Hashnode,
+    g4f.Provider.GptForLove,
+    g4f.Provider.GPTalk
+
 ]
-responce = ['']
-def GPT(text):
-    async def run_provider(provider: g4f.Provider.BaseProvider):
+
+def send(text):
+    async def run_provider(provider: g4f.Provider.BaseProvider, messages: list):
         try:
             response = await g4f.ChatCompletion.create_async(
                 model=g4f.models.default,
-                messages=[{"role": "user", "content": text}],
-                provider=provider,
+                messages=messages,
+                provider=provider
             )
-            responce[0] = response
-            print(f"{provider.__name__}:", response)
-        except Exception as e:
-            responce[0] = e
-            print(f"{provider.__name__}:", e)
+            return response
+        except:
+            pass
 
-    async def run_all(text):
+    async def run_all(messages):
         calls = [
-            run_provider(provider) for provider in _providers
+            run_provider(provider=provider, messages=messages) for provider in _providers
         ]
-        await asyncio.gather(*calls)
+        response = await asyncio.gather(*calls)
+        return response
 
-    asyncio.run(run_all(text))
-    return responce[0]
 
-shablon = {'1':'вопрос о трамвае', '2':'любая цифра от 1 до 24', '3':'что-то другое'}
-GPT('Есть тут спрашивается о трамвае: Где трамвай. То ответь 1')
+    returner = None
+    response = asyncio.run(run_all(text))
+    for i in response:
+        if i != None:
+            returner = i
+            break
+        else:
+            returner = i
+    return returner
+
+messages = []
+
+def GPT(message: str):
+    messages.append({"role": "user", "content": message})
+    while True:
+        answer = send(messages)
+        if answer != None:
+            break
+    print('GPT: ' + str(answer))
+    messages.append({"role": "user", "content": answer})
