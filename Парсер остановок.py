@@ -4,7 +4,10 @@ import json
 
 stations = {}
 tralleibus = {}
-alphavit = ['1', '4', '7', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Э', 'Ю', 'Я',]
+alphavit = ['1', '4', '7', 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Э', 'Ю', 'Я']
+
+i1 = [0]
+i2 = [0]
 
 for i in alphavit:
     stations[i] = {}
@@ -38,11 +41,13 @@ def bukva(i):
             try:
                 id = str_json['@href'].split('/')[2]
                 if len(id) < 5:
-                    stations[i][str(id)] = str_json['#text']
+                    stations[str(id)] = str_json['#text']
                     print(f"Автобусная остановка: {str_json['#text']} - добавлена в список!")
+                    i1[0] += 1
                 else:
-                    tralleibus[i][str(id)] = str_json['#text']
+                    tralleibus[str(id)] = str_json['#text']
                     print(f"Траллейбусная остановка: {str_json['#text']} - добавлена в список!")
+                    i2[0] += 1
             except:
                 pass
 
@@ -67,3 +72,8 @@ with open("Остановки траллейбусы.json", "r") as json_station
 with open("Остановки трамваи.json", "r") as json_station:
     station = json.load(json_station)
     print(str(len(station)) + ' трамвайных остановок в ФАЙЛЕ!')
+
+print(len(str(stations)))
+print(i1[0])
+print(len(str(tralleibus)))
+print(i2[0])

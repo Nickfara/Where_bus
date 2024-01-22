@@ -22,6 +22,7 @@ with open("Остановки трамваи.json", "r") as json_station:
 print(stations)
 
 def program(number, station):
+    print('Поиск трамвая!')
     import json
     url = "https://online.ettu.ru/station/" + station
 
@@ -51,6 +52,7 @@ def program(number, station):
     transport_list = []
     # Получение списка трамваев!
     try:
+        print('Получение списка трамваев!')
         for x in json['html']['body']['div']:
             if x == 'p':
                 try:
@@ -73,21 +75,34 @@ def program(number, station):
         transport_list.append('Пока неизвестная ошибка')
 
     def where_my_transport(number, station):
+        print('Получение ответа!')
         number = str(number)
-        text = f"трамвая: {number} нет в списке по остановке: " + stations['Трамваи'][station]
 
+        text = f"{number} трамвая пока нет в списке на остановке: " + stations['Трамваи'][station]
+        print(transport_list)
         for i in transport_list:
+            print('Работает цикл')
             if i == 'Нет данных':
+                print('нет данных')
                 text = i + ' по остановке: ' + stations['Трамваи'][station]
             elif i == 'Пока неизвестная ошибка':
+                print('Какая-та ебучая ошибка')
                 text = i + ' по остановке: ' + stations['Трамваи'][station]
             else:
+                print('Всё хорошо')
                 if i['number'] == number:
+                    print('Всё супер!')
                     text = i['number'] + ' трамвай будет через: ' + i['time'] + ', на остановке: ' + stations['Трамваи'][station]
-                    break
+                    return text
+                else:
+                    print('Трамвая нет!')
+                    text = f"{number} трамвая пока нет в списке на остановке: " + stations['Трамваи'][station]
+        print('Сейчас будет ответ!')
         return text
-
-    return(where_my_transport(number, station))
+    answer = where_my_transport(number, station)
+    print('Ответ готов!')
+    print(answer)
+    return(answer)
 
 class MainApp(App):
     def menu_build(self):
